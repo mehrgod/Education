@@ -71,20 +71,20 @@ public class Education {
 //        findStudentSemester();
 //        System.out.println(normal("4,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,2,6,0,3,0,0,1,6,12,1,0,0,0,1,2,10,0,0,0,0,2,0,0,0,12,0,0,0,0,0,4,0,6,4,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0"));
 //==========================================
-        forCMspam();
+//        forCMspam();
         //CMSPAM
-        SPMFtoTEXT();
+//        SPMFtoTEXT();
         //remove length less than two
         //Create Top 30
         createVectorUser();
         //normalize using python
         //cluster using python
-        createStatcluster();
-        findFrequencyPatternCluster();
+//        createStatcluster();
+//        findFrequencyPatternCluster();
         //Sort difference of averages and order the patterns
         //Plot 2 clusters using pyhton
-        findFrequencyPatternAll();
-        reorder();
+//        findFrequencyPatternAll();
+//        reorder();
 
     }
 
@@ -792,11 +792,13 @@ public class Education {
 
     public static void forCMspam() throws FileNotFoundException, IOException {
 //        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequence.txt");
-        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Sequence.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Sequence.txt");
+        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
 //        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceCMSPAMdot.text");
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\SequenceCMSPAM.text");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\SequenceCMSPAM.text");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence60P1CMSPAM.text");
         FileWriter fw = new FileWriter(fileOut);
 
         String line = "";
@@ -829,11 +831,11 @@ public class Education {
 
     public static void SPMFtoTEXT() throws FileNotFoundException, IOException {
 //        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceCMSPAMpatternsAll.txt");
-        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Patterns.txt");
+        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Patterns.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
 //        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceCMSPAMpatternsAllTranslateSUP.text");
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\PatternsTranslate.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\PatternsTranslate.txt");
         FileWriter fw = new FileWriter(fileOut);
 
         String line = "";
@@ -877,15 +879,15 @@ public class Education {
 
     public static void createVectorUser() throws FileNotFoundException, IOException {
 //        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequence.txt");
-        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Sequence.txt");
+        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence60P2.txt");
         BufferedReader br1 = new BufferedReader(new FileReader(fileIn1));
 
 //        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceCMSPAMpatternsTranslate.text");
-        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\PatternsTranslateFilter.txt");
+        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\PatternsTranslateFilter.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(fileIn2));
 
 //        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceVectorNormal.txt");
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\SequenceVector.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence60P2Vector.txt");
         FileWriter fw = new FileWriter(fileOut);
 
 //        HashMap<String, Integer> hm = new HashMap<String, Integer>();
