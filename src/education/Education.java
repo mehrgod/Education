@@ -5,6 +5,7 @@
  */
 package education;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -70,15 +71,22 @@ public class Education {
 //        filterMapPerf();
 //        findStudentSemester();
 //        System.out.println(normal("4,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,2,6,0,3,0,0,1,6,12,1,0,0,0,1,2,10,0,0,0,0,2,0,0,0,12,0,0,0,0,0,4,0,6,4,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0"));
+//        findGenomeSequence();
+//        filterComplexity();
+//        findCommon();
+//        findCourse();
+        statRaw();
 //==========================================
 //        forCMspam();
-        //CMSPAM
+//        CMSPAM
 //        SPMFtoTEXT();
         //remove length less than two
         //Create Top 30
-        createVectorUser();
-        //normalize using python
-        //cluster using python
+//        createVectorUser();
+//        normalize using python
+//        readyNormal();
+//        cluster using python
+//        addCluster();
 //        createStatcluster();
 //        findFrequencyPatternCluster();
         //Sort difference of averages and order the patterns
@@ -793,20 +801,30 @@ public class Education {
     public static void forCMspam() throws FileNotFoundException, IOException {
 //        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequence.txt");
 //        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Sequence.txt");
-        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\QuizLabelTimeGenomeSequenceFilter.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\LabelSequenceFilter.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\Line\\LabelSequencePlusFilter.txt");
+        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\LabelSequenceFilter.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
 //        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceCMSPAMdot.text");
 //        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\SequenceCMSPAM.text");
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence60P1CMSPAM.text");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence60P1CMSPAM.text");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\SequenceCMSPAM.text");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\SequenceCMSPAM.text");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Line\\SequencePlusCMSPAM.text");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\SequenceCMSPAM.text");
         FileWriter fw = new FileWriter(fileOut);
 
         String line = "";
         while ((line = br.readLine()) != null) {
             String seq = line.split("\t")[1];
 //            seq = seq.replace("_", "x");
-            seq = seq.replace("F", "e");
+            seq = seq.replace("F", "h");
             seq = seq.replace("S", "b");
+            seq = seq.replace("+", "p");
+            seq = seq.replace("E", "i");
 
             String[] token = seq.split("_");
 
@@ -831,11 +849,17 @@ public class Education {
 
     public static void SPMFtoTEXT() throws FileNotFoundException, IOException {
 //        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceCMSPAMpatternsAll.txt");
-        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Patterns.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Patterns.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\SequenceCMSPAM.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\Line\\pattern301Plus.txt");
+        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\patterns3.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
 //        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceCMSPAMpatternsAllTranslateSUP.text");
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\PatternsTranslate.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\PatternsTranslate.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\SequenceCMSPAMtranslate.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Line\\pattern301PlusTranslate.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\patternsTranslate.txt");
         FileWriter fw = new FileWriter(fileOut);
 
         String line = "";
@@ -851,8 +875,10 @@ public class Education {
         String sup = s.split(":")[1];
         String t = s.split("#")[0];
         t = t.replace("x", "_");
-        t = t.replace("e", "F");
+        t = t.replace("h", "F");
         t = t.replace("b", "S");
+        t = t.replace("i", "E");
+        t = t.replace("p", "+");
         System.out.println(t.replaceAll(" -1 ", ""));
         return t.replaceAll(" -1 ", "") + "\t" + sup.trim();
     }
@@ -879,15 +905,24 @@ public class Education {
 
     public static void createVectorUser() throws FileNotFoundException, IOException {
 //        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequence.txt");
-        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence60P2.txt");
+//        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\QuizLabelTimeGenomeSequenceFilter.txt");
+//        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\example\\LabelSequenceFilter.txt");
+        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\LabelSequenceFilter.txt");
+//        BufferedReader br1 = new BufferedReader(new FileReader(fileIn1));
         BufferedReader br1 = new BufferedReader(new FileReader(fileIn1));
 
 //        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceCMSPAMpatternsTranslate.text");
-        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\PatternsTranslateFilter.txt");
+//        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\midTerm\\PatternsTranslateFilter.txt");
+//        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\SequenceCMSPAMtranslateFilter.txt");
+//        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\example\\patternTranslateFilter.txt");
+        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\patternsTranslate.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(fileIn2));
 
 //        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceVectorNormal.txt");
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\Sequence60P2Vector.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\midTerm\\Sequence60P1Vector.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\SequenceVector.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\SequenceVector.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\SequenceVector.txt");
         FileWriter fw = new FileWriter(fileOut);
 
 //        HashMap<String, Integer> hm = new HashMap<String, Integer>();
@@ -915,7 +950,7 @@ public class Education {
 //                System.out.println("c: " + c);
                 vector = vector + "," + c;
             }
-            System.out.println(vector);
+            System.out.println(vector.substring(1));
 //            fw.write(id + "\t" + normal(vector.substring(1)) + "\n");
             fw.write(id + "\t" + vector.substring(1) + "\n");
 //            for (String s : hm.keySet()) {
@@ -1474,15 +1509,21 @@ public class Education {
         BufferedReader brp = new BufferedReader(new FileReader(fileInp));
 
 //        File fileInc = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceVectorNormal1Cluster.txt");
-        File fileInc = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\SequenceVectorNormalCluster.txt");
+//        File fileInc = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\SequenceVectorNormalCluster.txt");
+//        File fileInc = new File("C:\\Project\\EDU\\files\\2013\\example\\VectorNormal1Cluster.txt");
+        File fileInc = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\VectorNormal1Cluster.txt");
         BufferedReader brc = new BufferedReader(new FileReader(fileInc));
 
 //        File fileInv = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeSequenceVectorNormal1.txt");
-        File fileInv = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\SequenceVectorNormal.txt");
+//        File fileInv = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\SequenceVectorNormal.txt");
+//        File fileInv = new File("C:\\Project\\EDU\\files\\2013\\example\\VectorNormal1.txt");
+        File fileInv = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\VectorNormal1.txt");
         BufferedReader brv = new BufferedReader(new FileReader(fileInv));
 
 //        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\statNormal1.txt");
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormal.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormal.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\statNormal.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\statNormal.txt");
         FileWriter fw = new FileWriter(fileOut);
 
         String line = "";
@@ -1898,16 +1939,24 @@ public class Education {
     }
 
     public static void findFrequencyPatternAll() throws FileNotFoundException, IOException {
-        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormal.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormal.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\statNormal.txt");
+        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\statNormal.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
-        File fileT = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Top30.txt");
+//        File fileT = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Top30.txt");
+//        File fileT = new File("C:\\Project\\EDU\\files\\2013\\example\\Top30.txt");
+        File fileT = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\Top30.txt");
         BufferedReader brt = new BufferedReader(new FileReader(fileT));
 
-        File fileP = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\PatternsTranslateFilter.txt");
+//        File fileP = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\PatternsTranslateFilter.txt");
+//        File fileP = new File("C:\\Project\\EDU\\files\\2013\\example\\PatternTranslateFilter.txt");
+        File fileP = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\PatternsTranslate.txt");
         BufferedReader brp = new BufferedReader(new FileReader(fileP));
 
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormalAllStdv.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormalAllStdvPost.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\statNormalAllStdvLG.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\statNormalAllStdvLG.txt");
         FileWriter fw = new FileWriter(fileOut);
 
         ArrayList<String> top30 = new ArrayList<String>();
@@ -1919,7 +1968,7 @@ public class Education {
         }
 
         while ((line = brp.readLine()) != null) {
-            all.add(line.split("\\s+")[0]);
+            all.add(line.split("\t+")[0]);
         }
 
         ArrayList<String> cls0low = new ArrayList<String>();
@@ -2029,19 +2078,29 @@ public class Education {
     }
 
     public static void findFrequencyPatternCluster() throws FileNotFoundException, IOException {
-        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormal.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormal.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\statNormal.txt");
+        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\statNormal.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
-        File fileT = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Top30.txt");
+//        File fileT = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Top30.txt");
+//        File fileT = new File("C:\\Project\\EDU\\files\\2013\\example\\Top30.txt");
+        File fileT = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\Top40.txt");
         BufferedReader brt = new BufferedReader(new FileReader(fileT));
 
-        File fileP = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\PatternsTranslateFilter.txt");
+//        File fileP = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\PatternsTranslateFilter.txt");
+//        File fileP = new File("C:\\Project\\EDU\\files\\2013\\example\\PatternTranslateFilter.txt");
+        File fileP = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\PatternsTranslate.txt");
         BufferedReader brp = new BufferedReader(new FileReader(fileP));
 
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormalClusterStdv.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\statNormalClusterStdv.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\statNormal1ClusterStdv.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\statNormal1ClusterStdv40.txt");
         FileWriter fw = new FileWriter(fileOut);
 
-        File fileOrd = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Order.txt");
+//        File fileOrd = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Order.txt");
+//        File fileOrd = new File("C:\\Project\\EDU\\files\\2013\\example\\Order.txt");
+        File fileOrd = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\Order40.txt");
         FileWriter fwOrd = new FileWriter(fileOrd);
 
         ArrayList<String> top30 = new ArrayList<String>();
@@ -2118,7 +2177,7 @@ public class Education {
             }
         }
 
-        fw.write(avgStr.substring(1) + "\n" + stdStr.substring(1) + "\n\n");
+        fw.write(avgStr.substring(1) + "\n" + stdStr.substring(1));
 ////////////////////////////////////////////////////////////////////////////
 
         fw.close();
@@ -2154,16 +2213,24 @@ public class Education {
     }
 
     public static void reorder() throws FileNotFoundException, IOException {
-        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\C0hi.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\C0hiPost.txt");
+//        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\C0lowLG.txt");
+        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\C0hiLG.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
-        File fileO = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Order.txt");
+//        File fileO = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\Order.txt");
+//        File fileO = new File("C:\\Project\\EDU\\files\\2013\\example\\Order.txt");
+        File fileO = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\Order.txt");
         BufferedReader bro = new BufferedReader(new FileReader(fileO));
 
-        File fileOn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\OrderNew.txt");
+//        File fileOn = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\OrderNew.txt");
+//        File fileOn = new File("C:\\Project\\EDU\\files\\2013\\example\\OrderNew.txt");
+        File fileOn = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\OrderNew.txt");
         BufferedReader bron = new BufferedReader(new FileReader(fileOn));
 
-        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\C0hiOrder.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\revised\\clean\\C0hiPostOrder.txt");
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\C0lowLGOrder.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\C0hiLGOrder.txt");
         FileWriter fw = new FileWriter(fileOut);
 
         ArrayList<String> order = new ArrayList<String>();
@@ -2188,38 +2255,299 @@ public class Education {
         }
 
         int f = 0;
-        
+
         while ((line = br.readLine()) != null) {
             String[] token = line.split(",");
             if (f == 0) {
-                for (String s: token) {
+                for (String s : token) {
                     mean.add(s);
                 }
                 f = 1;
             } else {
-                for (String s: token){
+                for (String s : token) {
                     stdv.add(s);
                 }
             }
         }
-        
+
         String avg = "";
         String std = "";
-        
-        for (int i = 0; i < newOrder.size(); i++){
+
+        for (int i = 0; i < newOrder.size(); i++) {
             String ptrn = newOrder.get(i);
             int ix = order.indexOf(ptrn);
             avg = avg + "," + mean.get(ix);
             std = std + "," + stdv.get(ix);
         }
-        
+
         fw.write(avg.substring(1) + "\n" + std.substring(1));
-        
+
         br.close();
         bro.close();
         bron.close();
         fw.close();
-        
+    }
+
+    public static void findGenomeSequence() throws FileNotFoundException, IOException {
+//        File fileIn = new File("C:\\Project\\EDU\\files\\QuizLabelTime.txt");
+        File fileIn = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeGenome.txt");
+        BufferedReader br = new BufferedReader(new FileReader(fileIn));
+
+//        File fileOut = new File("C:\\Project\\EDU\\files\\QuizLabelTimeSequenceActivity2.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\QuizLabelTimeGenomeSequence.txt");
+        FileWriter fw = new FileWriter(fileOut);
+
+        ArrayList<String> seq = new ArrayList<String>();
+
+        String line = br.readLine();
+        String[] token = line.split("\t");
+
+        String user = token[0];
+//        String session = token[1];
+        String activityname = token[2];
+        String result = token[3];
+        String durationseconds = token[4];
+
+        String oldUser = user;
+//        String oldSession = session;
+        String oldActivityname = activityname;
+
+        seq.add(durationseconds);
+
+        while ((line = br.readLine()) != null) {
+            oldUser = user;
+//            oldSession = session;
+            oldActivityname = activityname;
+
+            token = line.split("\t");
+            user = token[0];
+//            session = token[1];
+            activityname = token[2];
+            result = token[3];
+            durationseconds = token[4];
+
+            if (!activityname.equals(oldActivityname)) {
+//            if (!user.equals(oldUser)) {
+                seq.add("_");
+                fw.write(oldActivityname + "\t_" + mergeSequence(seq) + "\n");
+                seq = new ArrayList<String>();
+            } else if (!user.equals(oldUser)) {
+//            } else if (!activityname.equals(oldActivityname)) {
+                seq.add("_");
+            }
+
+            seq.add(durationseconds);
+
+        }
+
+        fw.write(oldUser + "\t_" + mergeSequence(seq) + "_\n");
+
+        br.close();
+        fw.close();
+    }
+
+    public static void filterComplexity() throws FileNotFoundException, IOException {
+        File fileInC = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\complexity.txt");
+        BufferedReader brc = new BufferedReader(new FileReader(fileInC));
+
+        File fileInV = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\VectorNormal1.txt");
+        BufferedReader brv = new BufferedReader(new FileReader(fileInV));
+
+        File fileOutE = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\easy.txt");
+        FileWriter fwe = new FileWriter(fileOutE);
+
+        File fileOutH = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\hard.txt");
+        FileWriter fwh = new FileWriter(fileOutH);
+
+        ArrayList<String> easy = new ArrayList<String>();
+        ArrayList<String> hard = new ArrayList<String>();
+
+        String line = "";
+        while ((line = brc.readLine()) != null) {
+            String[] token = line.split("\t");
+            String problem = token[0];
+            String comp = token[1];
+            if (comp.equals("h")) {
+                hard.add(problem);
+            }
+            if (comp.equals("l")) {
+                easy.add(problem);
+            }
+        }
+
+        line = "";
+        while ((line = brv.readLine()) != null) {
+            String[] token = line.split("\t");
+            String problem = token[0];
+            if (easy.contains(problem)) {
+                fwe.write(line + "\n");
+            }
+            if (hard.contains(problem)) {
+                fwh.write(line + "\n");
+            }
+        }
+
+        brc.close();
+        brv.close();
+        fwe.close();
+        fwh.close();
+    }
+
+    public static void findCommon() throws FileNotFoundException, IOException {
+        File fileIn1 = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\f1.txt");
+        BufferedReader br1 = new BufferedReader(new FileReader(fileIn1));
+
+        File fileIn2 = new File("C:\\Project\\EDU\\files\\2013\\revised\\complexity\\f2.txt");
+        BufferedReader br2 = new BufferedReader(new FileReader(fileIn2));
+
+        ArrayList<String> easy = new ArrayList<String>();
+        ArrayList<String> hard = new ArrayList<String>();
+
+        String line = "";
+        while ((line = br1.readLine()) != null) {
+            easy.add(line.trim());
+        }
+
+        line = "";
+        while ((line = br2.readLine()) != null) {
+            hard.add(line.trim());
+        }
+
+        for (String s : easy) {
+            if (hard.contains(s)) {
+                System.out.println(s);
+            }
+        }
+
+        br1.close();
+        br2.close();
+    }
+
+    public static void readyNormal() throws FileNotFoundException, IOException {
+//        File fileInV = new File("C:\\Project\\EDU\\files\\2013\\example\\normalVec.txt");
+        File fileInV = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\normalVec.txt");
+        BufferedReader brv = new BufferedReader(new FileReader(fileInV));
+
+//        File fileInS = new File("C:\\Project\\EDU\\files\\2013\\example\\SequenceVector.txt");
+        File fileInS = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\SequenceVector.txt");
+        BufferedReader brs = new BufferedReader(new FileReader(fileInS));
+
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\VectorNormal1.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\VectorNormal1.txt");
+        FileWriter fw = new FileWriter(fileOut);
+
+        ArrayList<String> ids = new ArrayList<String>();
+
+        String line = "";
+        while ((line = brs.readLine()) != null) {
+            String id = line.split("\t")[0];
+            ids.add(id);
+        }
+
+        int c = 0;
+        while ((line = brv.readLine()) != null) {
+            line = line.replaceAll("\t", ",");
+            fw.write(ids.get(c) + "\t" + line + "\n");
+            c++;
+        }
+
+        brs.close();
+        brv.close();
+        fw.close();
 
     }
+
+    public static void addCluster() throws FileNotFoundException, IOException {
+//        File fileInC = new File("C:\\Project\\EDU\\files\\2013\\example\\Cluster.txt");
+        File fileInC = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\Cluster.txt");
+        BufferedReader brc = new BufferedReader(new FileReader(fileInC));
+
+//        File fileInS = new File("C:\\Project\\EDU\\files\\2013\\example\\SequenceVector.txt");
+        File fileInS = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\SequenceVector.txt");
+        BufferedReader brs = new BufferedReader(new FileReader(fileInS));
+
+//        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\VectorNormal1Cluster.txt");
+        File fileOut = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\VectorNormal1Cluster.txt");
+        FileWriter fw = new FileWriter(fileOut);
+
+        ArrayList<String> ids = new ArrayList<String>();
+
+        String line = "";
+        while ((line = brs.readLine()) != null) {
+            String id = line.split("\t")[0];
+            ids.add(id);
+        }
+
+        int c = 0;
+        while ((line = brc.readLine()) != null) {
+            fw.write(ids.get(c) + "\t" + line + "\n");
+            c++;
+        }
+
+        brc.close();
+        brs.close();
+        fw.close();
+
+    }
+
+    public static void findCourse() throws FileNotFoundException, IOException {
+        File fileIn = new File("C:\\Project\\EDU\\kdd10\\kddcup_challenge\\algebra_2008_2009_train.txt");
+        BufferedReader br = new BufferedReader(new FileReader(fileIn));
+
+        ArrayList<String> prob = new ArrayList<String>();
+
+        String line = "";
+        while ((line = br.readLine()) != null) {
+            String problem = line.split("\t")[2];
+//            System.out.println(problem);
+            if (!prob.contains(problem)) {
+                prob.add(problem);
+//                System.out.println(problem);
+            }
+        }
+        System.out.println(prob.size());
+    }
+
+    public static void statRaw() throws FileNotFoundException, IOException {
+        File file = new File("C:\\Project\\EDU\\files\\2013\\example\\LabelSequenceFilter.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+        String line = "";
+
+        int s = 0;
+        int f = 0;
+        int S = 0;
+        int F = 0;
+        int e = 0;
+        int E = 0;
+
+        while ((line = br.readLine()) != null) {
+            for (int i = 0; i < line.length(); i++) {
+                if (line.charAt(i) == 's') {
+                    s++;
+                } else if (line.charAt(i) == 'S') {
+                    S++;
+                } else if (line.charAt(i) == 'f') {
+                    f++;
+                } else if (line.charAt(i) == 'F') {
+                    F++;
+                } else if (line.charAt(i) == 'e') {
+                    e++;
+                } else if (line.charAt(i) == 'E') {
+                    E++;
+                }
+            }
+        }
+
+        System.out.println("s: " + s);
+        System.out.println("S: " + S);
+        System.out.println("f: " + f);
+        System.out.println("F: " + F);
+        System.out.println("e: " + e);
+        System.out.println("E: " + E);
+        
+        br.close();
+
+    }
+
 }

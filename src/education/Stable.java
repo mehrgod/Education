@@ -19,14 +19,16 @@ import education.Util;
  */
 public class Stable {
     
-    static String path = "C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\";
+    static String path = "C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\midTerm\\";
     static int min = 60;
     
     public static void main(String[] args) throws IOException{
 //        checkLength();
 //        removeLessThan(min);
 //        testShuffle();
-        shuffle();
+//        shuffle();
+//        splitHalf();
+        separateDistance();
     }
 
     public static void checkLength() throws FileNotFoundException, IOException {
@@ -101,6 +103,40 @@ public class Stable {
         
     }
     
+    public static void splitHalf() throws FileNotFoundException, IOException{
+        File fileIn = new File(path + "Sequence" + min + ".txt");
+        BufferedReader br = new BufferedReader(new FileReader(fileIn));
+
+        File fileOut1 = new File(path + "Sequence" + min + "P1.txt");
+        FileWriter fw1 = new FileWriter(fileOut1);
+        
+        File fileOut2 = new File(path + "Sequence" + min + "P2.txt");
+        FileWriter fw2 = new FileWriter(fileOut2);
+                
+        String line = "";
+        while ((line = br.readLine()) != null){
+            String id = line.split("\t")[0];
+            String[] token = line.split("\t")[1].split("_");
+            
+            String out = "";
+            for (int i = 0; i < token.length / 2; i++){
+                out = out + "_" + token[i];
+            }
+            fw1.write(id + "\t" + out + "\n");
+            
+            out = "";
+            for (int i = token.length / 2; i < token.length; i++){
+                out = out + "_" + token[i];
+            }
+            fw2.write(id + "\t" + out + "\n");            
+        }
+        
+        br.close();
+        fw1.close();
+        fw2.close();
+        
+    }
+    
     public static void testShuffle(){
         String s = "1,2,3,4,5,6,7,8,9,0";
         String[] token = s.split(",");
@@ -109,5 +145,24 @@ public class Stable {
             System.out.println(str);
         }
     }
+    
+    public static void separateDistance() throws FileNotFoundException, IOException{
+        File fileIn = new File(path + "otherDistance.txt");
+        BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
+        File fileOut = new File(path + "otherDistanceAll.txt");
+        FileWriter fw = new FileWriter(fileOut);       
+                
+        String line = "";
+        while ((line = br.readLine()) != null){
+            String[] token = line.split(",");
+            for (String s: token){
+                fw.write(s + "\n");
+            }
+        }
+        
+        br.close();
+        fw.close();
+        
+    }
 }
