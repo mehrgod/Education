@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
  */
 public class Example {
 
-    static String path = "C:\\Project\\EDU\\files\\2013\\example\\topic\\";
+    static String path = "C:\\Project\\EDU\\files\\2013\\example\\Topic\\stability\\complexity\\";
 
     public static void main(String[] args) throws IOException {
 //        ArrayList<Double> temp = new ArrayList<Double>();
@@ -43,8 +43,11 @@ public class Example {
 //        findAverageExamplePerExample();
 //        dividDurationLabelLineTopic();
 //        findSequenceTopic();
-        sortDiff();
+//        sortDiff();
 //        mergeExample();
+
+//        findSequenceSession();
+        findSequenceTopicComplexity();
     }
 
     public static void ExampleMean() throws IOException {
@@ -590,12 +593,232 @@ public class Example {
         fw.close();
     }
 
+    public static void findSequenceSession() throws FileNotFoundException, IOException {
+        File fileIn = new File(path + "label.txt");
+        BufferedReader br = new BufferedReader(new FileReader(fileIn));
+
+        File fileOut = new File(path + "LabelSequence.txt");
+        FileWriter fw = new FileWriter(fileOut);
+
+        ArrayList<String> seq = new ArrayList<String>();
+
+        String line = br.readLine();
+        String[] token = line.split("\t");
+
+        String user = token[0].trim();
+        String session = token[2].trim();
+        String type = token[3].trim();
+        String activityname = token[4].trim();
+        String topic = token[5].trim();
+        String duration = token[6].trim();
+
+        String oldUser = user;
+        String oldSession = session;
+
+        seq.add(duration);
+
+        while ((line = br.readLine()) != null) {
+            oldUser = user;
+            oldSession = session;
+
+            token = line.split("\t");
+
+            user = token[0].trim();
+            session = token[2].trim();
+            type = token[3].trim();
+            activityname = token[4].trim();
+            topic = token[5].trim();
+            duration = token[6].trim();
+
+            if (!user.equals(oldUser)) {
+                seq.add("_");
+                fw.write(oldUser + "\t_" + mergeSequence(seq) + "\n");
+                seq = new ArrayList<String>();
+            } else if (!session.equals(oldSession)) {
+                seq.add("_");
+            }
+
+            seq.add(duration);
+        }
+
+        fw.write(oldUser + "\t_" + mergeSequence(seq) + "_\n");
+
+        br.close();
+        fw.close();
+    }
+
     public static String mergeSequence(ArrayList<String> array) {
         String seq = "";
         for (int i = 0; i < array.size(); i++) {
             seq = seq + array.get(i);
         }
         return seq.trim();
+    }
+
+    public static void findSequenceTopicComplexity() throws FileNotFoundException, IOException {
+        File fileIn = new File(path + "label.txt");
+        BufferedReader br = new BufferedReader(new FileReader(fileIn));
+
+        File fileQ = new File(path + "questionFilter.txt");
+        BufferedReader brq = new BufferedReader(new FileReader(fileQ));
+
+        File fileE = new File(path + "example.txt");
+        BufferedReader bre = new BufferedReader(new FileReader(fileE));
+
+        File fileEasy = new File(path + "LabelSequenceEasy.txt");
+        FileWriter fwe = new FileWriter(fileEasy);
+
+        File fileMedium = new File(path + "LabelSequenceMedium.txt");
+        FileWriter fwm = new FileWriter(fileMedium);
+
+        File fileHard = new File(path + "LabelSequenceHard.txt");
+        FileWriter fwh = new FileWriter(fileHard);
+
+        HashMap<String, String> hmq = new HashMap<String, String>();
+        HashMap<String, String> hme = new HashMap<String, String>();
+
+        ArrayList<String> seqe = new ArrayList<String>();
+        ArrayList<String> seqm = new ArrayList<String>();
+        ArrayList<String> seqh = new ArrayList<String>();
+
+        String line = "";
+
+        while ((line = bre.readLine()) != null) {
+            String[] token = line.split("\t");
+            hme.put(token[0].toLowerCase(), token[2].toLowerCase());
+        }
+
+        while ((line = brq.readLine()) != null) {
+            String[] token = line.split("\t");
+            hmq.put(token[0].toLowerCase(), token[2].toLowerCase());
+        }
+
+        line = br.readLine();
+        String[] token = line.split("\t");
+
+        String user = token[0].trim();
+        String session = token[2].trim();
+        String type = token[3].trim();
+        String activityname = token[4].trim();
+        String topic = token[5].trim();
+        String durationseconds = token[6].trim();
+
+        String oldUser = user;
+        String oldSession = session;
+        String oldActivityname = activityname;
+        String oldTopic = topic;
+
+        String dif = "";
+
+        if (type.startsWith("W")) {
+            dif = hme.get(activityname.toLowerCase());
+        } else if (type.startsWith("Q")) {
+            dif = hmq.get(activityname.toLowerCase());
+        } else {
+            System.out.println("Invalid type in: " + type);
+        }
+
+        if (dif.startsWith("l")) {
+            seqe.add(durationseconds);
+        } else if (dif.startsWith("m")) {
+            seqm.add(durationseconds);
+        } else if (dif.startsWith("h")) {
+            seqh.add(durationseconds);
+        } else {
+            System.out.println("Invalid complexity in: " + dif);
+        }
+
+        while ((line = br.readLine()) != null) {
+            oldUser = user;
+            oldSession = session;
+            oldActivityname = activityname;
+            oldTopic = topic;
+
+            token = line.split("\t");
+            user = token[0].trim();
+            session = token[2].trim();
+            type = token[3].trim();
+            activityname = token[4].trim();
+            topic = token[5].trim();
+            durationseconds = token[6].trim();
+
+            if (!user.equals(oldUser)) {
+                seqe.add("_");
+                seqm.add("_");
+                seqh.add("_");
+                fwe.write(oldUser + "\t_" + mergeSequence(seqe) + "\n");
+                fwm.write(oldUser + "\t_" + mergeSequence(seqm) + "\n");
+                fwh.write(oldUser + "\t_" + mergeSequence(seqh) + "\n");
+                seqe = new ArrayList<String>();
+                seqm = new ArrayList<String>();
+                seqh = new ArrayList<String>();
+            } else if (!session.equals(oldSession)) {
+                if (dif.startsWith("l")) {
+                    seqe.add("_");
+                }
+                if (dif.startsWith("m")) {
+                    seqm.add("_");
+                }
+                if (dif.startsWith("h")) {
+                    seqh.add("_");
+                }
+
+            } else if (!activityname.equals(oldActivityname) && type.equals("QUIZJET")) {
+                if (dif.startsWith("l")) {
+                    seqe.add("_");
+                }
+                if (dif.startsWith("m")) {
+                    seqm.add("_");
+                }
+                if (dif.startsWith("h")) {
+                    seqh.add("_");
+                }
+
+            } else if (!topic.equals(oldTopic)) {
+                if (dif.startsWith("l")) {
+                    seqe.add("_");
+                }
+                if (dif.startsWith("m")) {
+                    seqm.add("_");
+                }
+                if (dif.startsWith("h")) {
+                    seqh.add("_");
+                }
+            }
+
+            if (type.startsWith("W")) {
+                dif = hme.get(activityname.toLowerCase());
+            } else if (type.startsWith("Q")) {
+                dif = hmq.get(activityname.toLowerCase());
+            } else {
+
+                System.out.println("Invalid type in: " + type);
+            }
+
+            
+            if (dif.startsWith("l")) {
+                seqe.add(durationseconds);
+            } else if (dif.startsWith("m")) {
+                seqm.add(durationseconds);
+            } else if (dif.startsWith("h")) {
+                seqh.add(durationseconds);
+            } else {
+                System.out.println(line);
+                System.out.println("Invalid complexity in: " + dif);
+            }
+
+        }
+
+        fwe.write(oldUser + "\t_" + mergeSequence(seqe) + "_\n");
+        fwm.write(oldUser + "\t_" + mergeSequence(seqm) + "_\n");
+        fwh.write(oldUser + "\t_" + mergeSequence(seqh) + "_\n");
+
+        br.close();
+        brq.close();
+        bre.close();
+        fwe.close();
+        fwm.close();
+        fwh.close();
     }
 
     public static void findAverageExamplePerLine() throws FileNotFoundException, IOException {
@@ -739,7 +962,7 @@ public class Example {
 
         File fileOutO = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\Order20New.txt");
         FileWriter fwo = new FileWriter(fileOutO);
-        
+
         File fileOut1 = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\C0.txt");
         FileWriter fw1 = new FileWriter(fileOut1);
 
@@ -748,7 +971,7 @@ public class Example {
 
         HashMap<Double, item> hm = new HashMap<Double, item>();
         HashMap<String, Double> hmTemp = new HashMap<String, Double>();
-        
+
         ArrayList<String> pattern = new ArrayList<String>();
         ArrayList<Double> avg1 = new ArrayList<Double>();
         ArrayList<Double> stdv1 = new ArrayList<Double>();
@@ -759,17 +982,17 @@ public class Example {
         line = bro.readLine();
 
         String[] token = line.split(",");
-        for (int i = 0; i < token.length; i++){
+        for (int i = 0; i < token.length; i++) {
             pattern.add(token[i]);
         }
-        
+
         line = br.readLine();
         token = line.split("\t");
         System.out.println(token.length);
         for (int i = 0; i < token.length; i++) {
             avg1.add(Double.valueOf(token[i]));
         }
-        
+
         line = br.readLine();
         token = line.split("\t");
         for (int i = 0; i < token.length; i++) {
@@ -785,49 +1008,47 @@ public class Example {
         for (int i = 0; i < token.length; i++) {
             stdv2.add(Double.valueOf(token[i]));
         }
-        
-        for (int i = 0; i < pattern.size(); i++){
+
+        for (int i = 0; i < pattern.size(); i++) {
             item obj = new item();
             obj.pattern = pattern.get(i);
             obj.avg1 = avg1.get(i);
             obj.stdv1 = stdv1.get(i);
             obj.avg2 = avg2.get(i);
             obj.stdv2 = stdv2.get(i);
-            
+
             Double dif = avg1.get(i) - avg2.get(i);
-            
+
             hm.put(dif, obj);
             hmTemp.put(pattern.get(i), dif);
         }
-        
+
         LinkedHashMap<String, Double> lhm = Util.sortHashMapByValues(hmTemp);
-        
-        
+
         String out1 = "";
         String out2 = "";
         String out3 = "";
         String out4 = "";
         String order = "";
-        for (String s: lhm.keySet()){
+        for (String s : lhm.keySet()) {
             Double diff = lhm.get(s);
             item j = hm.get(diff);
             order = order + "," + j.pattern;
             out1 = out1 + "," + j.avg1;
             out2 = out2 + "," + j.stdv1;
             out3 = out3 + "," + j.avg2;
-            out4 = out4 + "," + j.stdv2;            
+            out4 = out4 + "," + j.stdv2;
         }
-        
+
         fwo.write(order.substring(1));
         fw1.write(out1.substring(1) + "\n" + out2.substring(1));
         fw2.write(out3.substring(1) + "\n" + out4.substring(1));
-        
+
         br.close();
         bro.close();
         fw1.close();
         fw2.close();
         fwo.close();
     }
-
 
 }

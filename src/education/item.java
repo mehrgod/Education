@@ -15,4 +15,6 @@ public class item {
     public Double stdv1;
     public Double avg2;
     public Double stdv2;
+    public Double avg3;
+    public Double stdv3;
 }

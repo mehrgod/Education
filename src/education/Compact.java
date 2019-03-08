@@ -29,14 +29,15 @@ import java.util.regex.Pattern;
  */
 public class Compact {
 
-    static String path = "C:\\Project\\EDU\\files\\2013\\compact\\revised\\clean\\";
+//    static String path = "C:\\Project\\EDU\\files\\2013\\compact\\revised\\clean\\";
+    static String path = "C:\\Project\\EDU\\files\\2013\\example\\topic\\compact\\";
 
     public static void main(String[] args) throws IOException {
 
 //        dividDurationLabel(findMinMaxQuiz());
 //        findSequence();
 //        countSequence();
-//        compactSequence();
+        compactSequence();
 //        forCMspam();
 //        SPMFtoTEXT();
 //        createVectorUser();
@@ -58,7 +59,7 @@ public class Compact {
 //        createStatcluster();
 //        findFrequencyPatternCluster();
 //        findFrequencyPatternAll();
-        reorder();
+//        reorder();
 
     }
 
@@ -386,6 +387,16 @@ public class Compact {
         Pattern ptrn4 = Pattern.compile(pattern4);
         Matcher matcher4 = ptrn4.matcher(out);
         out = matcher4.replaceAll("F+");
+
+        String pattern5 = "e{2,}";
+        Pattern ptrn5 = Pattern.compile(pattern5);
+        Matcher matcher5 = ptrn5.matcher(out);
+        out = matcher5.replaceAll("e+");
+
+        String pattern6 = "E{2,}";
+        Pattern ptrn6 = Pattern.compile(pattern6);
+        Matcher matcher6 = ptrn6.matcher(out);
+        out = matcher6.replaceAll("E+");
 
         return out;
     }
@@ -1214,7 +1225,7 @@ public class Compact {
         brp.close();
         fwOrd.close();
     }
-    
+
     public static void reorder() throws FileNotFoundException, IOException {
         File fileIn = new File(path + "C0low.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
@@ -1250,38 +1261,37 @@ public class Compact {
         }
 
         int f = 0;
-        
+
         while ((line = br.readLine()) != null) {
             String[] token = line.split(",");
             if (f == 0) {
-                for (String s: token) {
+                for (String s : token) {
                     mean.add(s);
                 }
                 f = 1;
             } else {
-                for (String s: token){
+                for (String s : token) {
                     stdv.add(s);
                 }
             }
         }
-        
+
         String avg = "";
         String std = "";
-        
-        for (int i = 0; i < newOrder.size(); i++){
+
+        for (int i = 0; i < newOrder.size(); i++) {
             String ptrn = newOrder.get(i);
             int ix = order.indexOf(ptrn);
             avg = avg + "," + mean.get(ix);
             std = std + "," + stdv.get(ix);
         }
-        
+
         fw.write(avg.substring(1) + "\n" + std.substring(1));
-        
+
         br.close();
         bro.close();
         bron.close();
         fw.close();
-        
 
     }
 

@@ -19,16 +19,17 @@ import education.Util;
  */
 public class Stable {
     
-    static String path = "C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\midTerm\\";
+//    static String path = "C:\\Project\\EDU\\files\\2013\\revised\\clean\\Stability\\midTerm\\";
+    static String path = "C:\\Project\\EDU\\files\\2013\\example\\Topic\\stability\\complexity\\hard\\";
     static int min = 60;
     
     public static void main(String[] args) throws IOException{
 //        checkLength();
 //        removeLessThan(min);
 //        testShuffle();
-//        shuffle();
+        shuffle();
 //        splitHalf();
-        separateDistance();
+//        separateDistance();
     }
 
     public static void checkLength() throws FileNotFoundException, IOException {
@@ -69,13 +70,13 @@ public class Stable {
     }
     
     public static void shuffle() throws FileNotFoundException, IOException{
-        File fileIn = new File(path + "Sequence" + min + ".txt");
+        File fileIn = new File(path + "LabelSequenceHardFilter.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
-        File fileOut1 = new File(path + "Sequence" + min + "P1.txt");
+        File fileOut1 = new File(path + "SequenceP1.txt");
         FileWriter fw1 = new FileWriter(fileOut1);
         
-        File fileOut2 = new File(path + "Sequence" + min + "P2.txt");
+        File fileOut2 = new File(path + "SequenceP2.txt");
         FileWriter fw2 = new FileWriter(fileOut2);
                 
         String line = "";
@@ -104,13 +105,13 @@ public class Stable {
     }
     
     public static void splitHalf() throws FileNotFoundException, IOException{
-        File fileIn = new File(path + "Sequence" + min + ".txt");
+        File fileIn = new File(path + "Sequence.txt");
         BufferedReader br = new BufferedReader(new FileReader(fileIn));
 
-        File fileOut1 = new File(path + "Sequence" + min + "P1.txt");
+        File fileOut1 = new File(path + "SequenceP1.txt");
         FileWriter fw1 = new FileWriter(fileOut1);
         
-        File fileOut2 = new File(path + "Sequence" + min + "P2.txt");
+        File fileOut2 = new File(path + "SequenceP2.txt");
         FileWriter fw2 = new FileWriter(fileOut2);
                 
         String line = "";
@@ -119,7 +120,7 @@ public class Stable {
             String[] token = line.split("\t")[1].split("_");
             
             String out = "";
-            for (int i = 0; i < token.length / 2; i++){
+            for (int i = 1; i < token.length / 2; i++){
                 out = out + "_" + token[i];
             }
             fw1.write(id + "\t" + out + "\n");
