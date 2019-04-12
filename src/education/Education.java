@@ -29,14 +29,15 @@ import java.util.LinkedHashMap;
 public class Education {
 
 //    static String path = "C:\\Project\\EDU\\files\\2013\\example\\Topic\\cluster";
-    static String path = "C:\\Project\\EDU\\files\\2013\\example\\Topic\\cluster\\perf\\lg";
+    static String path = "C:\\Project\\EDU\\files\\2013\\example\\Topic\\60";
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        mergeThree();
+//        mergeThree();
+//        mergeThreeAll();
 //        forCMspam();
 //        CMSPAM
 //        SPMFtoTEXT();
@@ -49,7 +50,7 @@ public class Education {
 //        readyNormal();
 //        cluster using python
 //        addCluster();
-//        createStatcluster();
+        createStatcluster();
 //        findFrequencyPatternCluster();
 //        findFrequencyPatternClusterAll();
 //        sortDiff();
@@ -3704,7 +3705,7 @@ public class Education {
     public static void addCluster() throws FileNotFoundException, IOException {
 //        File fileInC = new File("C:\\Project\\EDU\\files\\2013\\example\\Cluster.txt");
 //        File fileInC = new File("C:\\Project\\EDU\\files\\2013\\example\\Topic\\3\\Cluster.txt");
-        File fileInC = new File(path + "\\Cluster.txt");
+        File fileInC = new File(path + "\\Cluster3.txt");
         BufferedReader brc = new BufferedReader(new FileReader(fileInC));
 
 //        File fileInS = new File("C:\\Project\\EDU\\files\\2013\\example\\SequenceVector.txt");
@@ -4206,19 +4207,19 @@ public class Education {
             pattern = pattern + "," + pt;
             outl = outl + "," + low.get(i);
             int ix = ptrnmed.indexOf(pt);
-            if (ix > -1){
+            if (ix > -1) {
                 outm = outm + "," + med.get(ix);
             } else {
                 outm = outm + ",0";
             }
-            
+
             int iy = ptrnhi.indexOf(pt);
-            if (iy > -1){
+            if (iy > -1) {
                 outh = outh + "," + hi.get(iy);
             } else {
                 outh = outh + ",0";
             }
-            
+
         }
 
         System.out.println(pattern.substring(1));
@@ -4229,6 +4230,143 @@ public class Education {
         brl.close();
         brm.close();
         brh.close();
+    }
+
+    public static void mergeThreeAll() throws FileNotFoundException, IOException {
+        File fileInl = new File(path + "\\Low.txt");
+        BufferedReader brl = new BufferedReader(new FileReader(fileInl));
+
+        File fileInm = new File(path + "\\Med.txt");
+        BufferedReader brm = new BufferedReader(new FileReader(fileInm));
+
+        File fileInh = new File(path + "\\Hi.txt");
+        BufferedReader brh = new BufferedReader(new FileReader(fileInh));
+
+        ArrayList<String> ptrn = new ArrayList<String>();
+        ArrayList<String> ptrnlow = new ArrayList<String>();
+        ArrayList<String> ptrnmed = new ArrayList<String>();
+        ArrayList<String> ptrnhi = new ArrayList<String>();
+        ArrayList<String> low = new ArrayList<String>();
+        ArrayList<String> med = new ArrayList<String>();
+        ArrayList<String> hi = new ArrayList<String>();
+
+        String line = "";
+
+        while ((line = brl.readLine()) != null) {
+            String[] token = line.split("\t");
+            String p = token[0];
+            String f = token[1];
+            ptrnlow.add(p);
+            low.add(f);
+            if (!ptrn.contains(p)) {
+                ptrn.add(p);
+            }
+        }
+
+        while ((line = brm.readLine()) != null) {
+            String[] token = line.split("\t");
+            String p = token[0];
+            String f = token[1];
+            ptrnmed.add(p);
+            med.add(f);
+            if (!ptrn.contains(p)) {
+                ptrn.add(p);
+            }
+        }
+
+        while ((line = brh.readLine()) != null) {
+            String[] token = line.split("\t");
+            String p = token[0];
+            String f = token[1];
+            ptrnhi.add(p);
+            hi.add(f);
+            if (!ptrn.contains(p)) {
+                ptrn.add(p);
+            }
+        }
+
+        String pattern = "";
+        String outl = "";
+        String outm = "";
+        String outh = "";
+        for (int i = 0; i < ptrn.size(); i++) {
+            String pt = ptrn.get(i);
+            pattern = pattern + "," + pt;
+
+            int iz = ptrnlow.indexOf(pt);
+            if (iz > -1) {
+                outl = outl + "," + low.get(iz);
+            } else {
+                outl = outl + ",0";
+            }
+
+            int ix = ptrnmed.indexOf(pt);
+            if (ix > -1) {
+                outm = outm + "," + med.get(ix);
+            } else {
+                outm = outm + ",0";
+            }
+
+            int iy = ptrnhi.indexOf(pt);
+            if (iy > -1) {
+                outh = outh + "," + hi.get(iy);
+            } else {
+                outh = outh + ",0";
+            }
+
+        }
+
+        System.out.println(pattern.substring(1));
+        System.out.println(outl.substring(1));
+        System.out.println(outm.substring(1));
+        System.out.println(outh.substring(1));
+
+        brl.close();
+        brm.close();
+        brh.close();
+    }
+
+    public static void separateLowHiMed(String p) throws FileNotFoundException, IOException {
+        File fileInPerf = new File(path + "\\perfAll.txt");
+        BufferedReader brperf = new BufferedReader(new FileReader(fileInPerf));
+
+        File fileInPatt = new File(path + "\\PatternsTranslateFilter.txt");
+        BufferedReader brpatt = new BufferedReader(new FileReader(fileInPatt));
+
+        File fileInVec = new File(path + "\\VectorNormal1.txt");
+        BufferedReader brvec = new BufferedReader(new FileReader(fileInVec));
+
+        File fileOutL = new File(path + "\\low.txt");
+        FileWriter fwlow = new FileWriter(fileOutL);
+        
+        File fileOutM = new File(path + "\\low.txt");
+        FileWriter fwmed = new FileWriter(fileOutM);
+        
+        File fileOutH = new File(path + "\\low.txt");
+        FileWriter fwhi = new FileWriter(fileOutH);
+        
+        HashMap<String, String> vecMap = new HashMap<String, String>();
+        
+        String line = "";
+        while ((line = brvec.readLine()) != null) {
+            String[] token = line.split("\t");
+            String id = token [0].trim();
+            String vec = token [1].trim();
+            vecMap.put(id, vec);
+        }
+        
+        while ((line = brperf.readLine()) != null) {
+            String[] token = line.split("\t");
+            String id = token[0];
+            String prf = "";
+            if (p.equals("pre")){
+                prf = token[1];
+            } else if (p.equals("post")){
+                prf = token[2];
+            } else if (p.equals("lg")){
+                prf = token[3];
+            }
+        }
     }
 
 }
